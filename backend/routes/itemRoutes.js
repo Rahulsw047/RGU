@@ -3,7 +3,7 @@ const router=express.Router();
 const Item=require('../models/Item');
 const { route } = require('./employeeRoutes');
 
-router.post('/add',async(req,res)=>{
+router.post('/',async(req,res)=>{
     try{
         //body se data lena
         const {itemName,ratePerPiece}=req.body;
@@ -35,7 +35,7 @@ router.post('/add',async(req,res)=>{
     }
 });
 
-router.get('/all',async(req,res)=>{
+router.get('/',async(req,res)=>{
     try{
         const items=await Item.find().sort({itemName:1});
         res.status(200).json(items);

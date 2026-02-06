@@ -3,7 +3,7 @@ const router=express.Router();
 const WorkEntry=require('../models/WorkEntry');
 const Item=require('../models/Item');
 
-router.post('/add',async(req,res)=>{
+router.post('/',async(req,res)=>{
     try {
         const {employeeId,itemId,quantity,date}=req.body;
         //basic validation

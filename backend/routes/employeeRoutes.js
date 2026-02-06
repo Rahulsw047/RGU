@@ -6,14 +6,10 @@ router.post('/',async(req,res)=>{
     //req->request se aaya data
     //res->response bhejana
     try{
-        const{name,ratePerPiece,phone}=req.body;
-        if(!name||!ratePerPiece){
-            return res.status(400).json({message:"Naam aur Rate Bharna zaroori hai!"});
-        }
-
+        const{name,phone}=req.body;
+        
         const newEmployee=new Employee({
             name:name,
-            ratePerPiece:ratePerPiece,
             phone:phone
         });
 
@@ -32,7 +28,7 @@ router.post('/',async(req,res)=>{
 
 router.get('/',async(req,res)=>{
     try {
-        const employees=await Employee.find().sort({name:1});
+        const employees=await Employee.find();
         res.status(200).json(employees);
     } catch (error) {
         console.error("Error fetching employees:",error);
