@@ -19,7 +19,7 @@ mongoose.connect('mongodb://127.0.0.1:27017/ritika_udyog')
 //Routes
 app.use('/api/employees',require('./routes/employeeRoutes'));
 app.use('/api/items',require('./routes/itemRoutes'));
-app.use('/api/work',require('./routes/workRoutes'));
+app.use('/api/work-entries',require('./routes/workRoutes'));
 
 const PORT=5000;
 app.listen(PORT,()=>{

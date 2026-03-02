@@ -3,9 +3,9 @@ import { Container, Table, Button, Form, Modal,Card } from "react-bootstrap";
 import API from "../api";
 
 const ItemManagement=()=>{
-    const [item, setItem]=useState([]);
+    const [items, setItem]=useState([]);
     const [showModal,setShowModal]=useState(false);
-    const [newItem,setNewItem]=useState({name:'',rate:'',});
+    const [newItem,setNewItem]=useState({itemName:'',ratePerPiece:'',});
 
     const fetchItems=async ()=>{
         try{
@@ -26,10 +26,21 @@ const ItemManagement=()=>{
         try{
             await API.post('/items',newItem);
             setShowModal(false);
-            setNewItem({name:'',rate:''});
+            setNewItem({itemName:'',ratePerPiece:''});
             fetchItems();
         }catch(err){
             alert("Error Saving Item");
+        }
+    };
+
+    const handleDelete=async(id)=>{
+        if(window.confirm("Kya aap sach mein ye entry delete karna chahte hain?")){
+            try{
+                await API.delete(`/items/${id}`);
+                setEntries(entries=>entries.filter(entry=>entry._id!==id));
+            }catch(err){
+                alert("Delete karne mein error aaya!");
+            }
         }
     };
 
@@ -50,10 +61,10 @@ const ItemManagement=()=>{
                         </tr>
                     </thead>
                     <tbody>
-                        {item.map(item=>(
+                        {items.map(item=>(
                             <tr key={item._id}>
-                                <td>{item.name}</td>
-                                <td>{item.rate}/-</td>
+                                <td>{item.itemName}</td>
+                                <td>{item.ratePerPiece}/-</td>
                                 <td><Button variant="danger" size="sm">Delete</Button></td>
                             </tr>
                         ))}
@@ -67,12 +78,12 @@ const ItemManagement=()=>{
                     <Form onSubmit={handleSave}>
                         <Form.Group className="mb-3">
                             <Form.Label>Item Name</Form.Label>
-                            <Form.Control type="text" required onChange={(e)=>setNewItem({...newItem,name:e.target.value})}/>
+                            <Form.Control value={newItem.itemName} type="text" required onChange={(e)=>setNewItem({...newItem,itemName:e.target.value})}/>
                         </Form.Group>
 
                         <Form.Group className="mb-3">
                             <Form.Label>Rate</Form.Label>
-                            <Form.Control type="number" required onChange={(e)=>setNewItem({...newItem,rate:e.target.value})}/>
+                            <Form.Control  value={newItem.ratePerPiece} type="number" required onChange={(e)=>setNewItem({...newItem,ratePerPiece:e.target.value})}/>
                         </Form.Group>
 
                         <Button variant="primary" type="submit" className="w-100">Save Item</Button>

@@ -1,0 +1,16 @@
+@media print{
+    .d-print-none,.navbar, .btn{display: none !important;}
+    body{
+        background: white !important;
+        margin: 0;
+        padding: 0;
+    }
+    .page-break{page-break-after:always;}
+    .container{
+        width: 100% !important; 
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 10px !important;
+    }
+    
+}

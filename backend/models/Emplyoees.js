@@ -3,7 +3,8 @@ const mongoose= require('mongoose');
 const employeeSchema=new mongoose.Schema({
     name:{type:String, required: true},
     phone:{type:String},
-    joiningDate:{type:Date, default:Date.now}
+    joiningDate:{type:Date, default:Date.now},
+    ratePerPiece:{type:Number,default:0}
     
 });
 

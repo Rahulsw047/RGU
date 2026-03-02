@@ -8,7 +8,8 @@ import Dashboard from '../components/Dashboard'
 import WorkEntry from '../components/WorkEntry'
 import EmployeeManagement from '../components/EmplyoeeManagement';
 import ItemManagement from '../components/ItemManagement';
-
+import SummaryReport from '../components/SummaryReport';
+import DetailedReport from '../components/DetailedReport';
 
 function App() {
   const [count, setCount] = useState(0)
@@ -23,7 +24,7 @@ function App() {
         <Route path="/work-entry" element={<WorkEntry/>}/>
         <Route path="/employees" element={<EmployeeManagement/>}/>
         <Route path="/items" element={<ItemManagement/>}/>
-        <Route path="/reports" element={<Dashboard/>}/>
+        <Route path="/detailed-report" element={<DetailedReport/>}/>
       </Routes>
     </div>
     </Router>

@@ -32,7 +32,7 @@ const WorkEntry=()=>{
         loadInitialData();
     },[]);
 
-    // Form input handle
+    // // Form input handle
     const handleChange=(e)=>{
         setFormData({...formData,[e.target.name]:e.target.value});
     };
@@ -40,15 +40,44 @@ const WorkEntry=()=>{
     // Form Submit
     const handleSubmit=async (e)=>{
         e.preventDefault();
-        try{
-            await API.post('/work-entries',formData);
-            alert("Entry Saved Successfully!");
 
+        if(!items || items.length===0){
+            return alert("database me koi item nahi mila!");
+        }
+
+        const selectedItem=items.find(i=>i._id.toString()===formData.itemId.toString());
+        if(!selectedItem){
+            return alert("Item Select Kijiye!");
+        }
+
+        const rate=selectedItem.rate||selectedItem.ratePerPiece||0
+        const totalAmount=Number(formData.quantity)*Number(rate);
+
+        try{
+            const finalData={...formData, totalAmount};
+            //console.log("Sending to server:",finalData);
+
+            await API.post('/work-entries',finalData);
+             alert("Entry Saved Successfully!");
+
+            
+         //   const res=await API.get('/work-entries',finalData);
             setFormData({...formData,quantity:''});
-            const res=await API.get('/work-entries');
-            setEntries(res.data);
+            loadInitialData();
         }catch(err){
             alert("Error Saving Entry:"+err.response?.data?.message);
+        }
+    };
+
+    //Delete Entry
+    const handleDelete=async(id)=>{
+        if(window.confirm("Kya aap sach mein ye entry delete karna chahte hain?")){
+            try{
+                await API.delete(`/work-entries/${id}`);
+                setEntries(entries=>entries.filter(entry=>entry._id!==id));
+            }catch(err){
+                alert("Delete karne mein error aaya!");
+            }
         }
     };
 
@@ -61,7 +90,7 @@ const WorkEntry=()=>{
                    <Card className="shadow-sm p-3">
                       <Card.Body>
                         <Card.Title className="mb-3">Add New Entry</Card.Title>
-                        <Form>
+                        <Form onSubmit={handleSubmit}>
                             {/* Employee Select */}
                             <Form.Group className="mb-3">
                                 <Form.Label>Select Employee</Form.Label>
@@ -80,7 +109,7 @@ const WorkEntry=()=>{
                                 <Form.Select name="itemId" onChange={handleChange} required>
                                     <option value="">Choose...</option>
                                     {items.map(item=>(
-                                        <option key={item._id} value={item._id}>{item.name}({item.rate})</option>
+                                        <option key={item._id} value={item._id}>{item.itemName}({item.ratePerPiece})</option>
                                     ))
                                     }
                                 </Form.Select>
@@ -124,6 +153,7 @@ const WorkEntry=()=>{
                                         <th>Item</th>
                                         <th>Qty</th>
                                         <th>Time</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -131,9 +161,14 @@ const WorkEntry=()=>{
                                         entries.map(entry=>(
                                             <tr key={entry._id}>
                                                 <td>{entry.employeeId?.name}</td>
-                                                <td>{entry.itemId?.name}</td>
+                                                <td>{entry.itemId?.itemName}</td>
                                                 <td>{entry.quantity}</td>
-                                                <td>{entry.totalAmount}</td>
+                                                <td>{new Date(entry.date).toLocaleString('en-IN')}</td>
+                                                <td>
+                                                    <button className="btn btn-sm btn-outline-danger" onClick={()=>handleDelete(entry._id)}>
+                                                        Delete
+                                                    </button>
+                                                </td>
                                             </tr>
                                         ))
                                     }
