@@ -2,6 +2,7 @@ const express=require('express');
 const router=express.Router();
 const WorkEntry=require('../models/WorkEntry');
 const Item=require('../models/Item');
+const Emplyoees = require('../models/Emplyoees');
 
 router.get('/',async(req,res)=>{
     try{
@@ -150,6 +151,40 @@ router.delete('/:id', async(req,res)=>{
     try{
         await WorkEntry.findByIdAndDelete(req.params.id);
         res.json({message:"Entry Delete Successfully"});
+    }catch(err){
+        res.status(500).json({message:err.message});
+    }
+});
+
+router.get('/stats',async(req,res)=>{
+    try{
+        const month=new Date().getMonth()+1;
+        const year=new Date().getFullYear();
+        const start=new Date(year,month-1,1);
+        const end=new Date(year,month,0,23,59,59);
+
+        const totalWorkersCnt=await Emplyoees.countDocuments();
+
+        const monthlyStats=await WorkEntry.aggregate([
+            {
+                $match:{
+                    date:{$gte:start,$lte:end}
+                }
+            },
+            {
+                $group:{
+                    _id:null,
+                    totalAmount:{$sum:"$totalAmount"},
+                    monthlyEntries:{$sum:1}
+                }
+            }
+        ]);
+
+        res.json({
+            totalWokers:totalWorkersCnt||0,
+            monthlyEntries:monthlyStats[0]?.monthlyEntries||0,
+            totalAmount:monthlyStats[0]?.totalAmount||0
+        });
     }catch(err){
         res.status(500).json({message:err.message});
     }

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Container, Table, Button, Form, Modal, Card } from "react-bootstrap";
+import { motion, AnimatePresence } from "framer-motion";
 import API from '../api';
 
 const EmployeeManagement=()=>{
@@ -39,7 +40,8 @@ const EmployeeManagement=()=>{
         if(window.confirm("Are You Delete?")){
             try{
                 await API.delete(`/employees/${id}`);
-                fetchEmployees();
+               setEmployees(prev=>prev.filter(emp=>emp._id!==id));
+               alert("Employee Deleted!!");
             }catch(err){
                 alert("Error Deleting Employee");
             }
@@ -63,19 +65,26 @@ const EmployeeManagement=()=>{
                         </tr>
                     </thead>
                     <tbody>
+                        <AnimatePresence>
                         {employees.length>0?(
                             employees.map(emp=>(
-                                <tr key={emp._id}>
+                                <motion.tr key={emp._id}
+                                    initial={{opacity:0, x:-20}}
+                                    animate={{opacity:1, x:0}}
+                                    exit={{opacity:0, x:50, backgroundColor:"#ffebee"}}
+                                    layout
+                                    transition={{duration:0.3}}>
                                     <td>{emp.name}</td>
                                     <td>{emp.phone}</td>
                                     <td>
                                         <Button variant="danger" size="sm" onClick={()=>handleDelete(emp._id)}>Delete</Button>
                                     </td>
-                                </tr>
+                                </motion.tr>
                             ))
                         ):(
                             <tr><td colSpan="3" className="text-center">No employees found. Add one!</td></tr>
                         )}
+                        </AnimatePresence>
                     </tbody>
                 </Table>
             </Card>

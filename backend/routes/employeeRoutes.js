@@ -59,19 +59,20 @@ router.put('/update/:id',async(req,res)=>{
     }
 });
 
-router.delete('/delete/:id',async(req,res)=>{
+router.delete('/:id',async(req,res)=>{
     try {
-        const employeeId=req.params.id;
+        const id=req.params.id;
         //find and delete
-        const deletedEmployee=await Employee.findByIdAndDelete(employeeId);
+        const employee=await Employee.findById(id);
 
-        if(!deletedEmployee){
+        if(!employee){
             return res.status(404).json({message:"Employee nahi mila jise delete karna tha"});
         }
 
+        await Employee.findByIdAndDelete(id);
         res.status(200).json({
             message:"Employee delete ho gaya!",
-            id:deletedEmployee._id
+            id:employee
         });
     } catch (error) {
         console.error("Error Delete Employee:",error);

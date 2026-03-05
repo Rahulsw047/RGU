@@ -37,7 +37,7 @@ const ItemManagement=()=>{
         if(window.confirm("Kya aap sach mein ye entry delete karna chahte hain?")){
             try{
                 await API.delete(`/items/${id}`);
-                setEntries(entries=>entries.filter(entry=>entry._id!==id));
+                setItem(itm=>itm.filter(item=>item._id!==id));
             }catch(err){
                 alert("Delete karne mein error aaya!");
             }
@@ -65,7 +65,7 @@ const ItemManagement=()=>{
                             <tr key={item._id}>
                                 <td>{item.itemName}</td>
                                 <td>{item.ratePerPiece}/-</td>
-                                <td><Button variant="danger" size="sm">Delete</Button></td>
+                                <td><Button variant="danger" size="sm" onClick={()=>handleDelete(item._id)}>Delete</Button></td>
                             </tr>
                         ))}
                     </tbody>
