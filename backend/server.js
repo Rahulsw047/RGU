@@ -10,9 +10,9 @@ const app=express();
 app.use(cors());
 app.use(express.json());//handle json data
 
-
+const mongoURI=process.env.MONGO_URI || "mongodb://127.0.0.1:27017/ritika_udyog"
 //MongoDB Connection
-mongoose.connect('mongodb://127.0.0.1:27017/ritika_udyog')
+mongoose.connect(mongoURI)
 .then(()=>console.log("Database Connected!"))
 .catch(err=>console.log("DB Connection Error:",err));
 
