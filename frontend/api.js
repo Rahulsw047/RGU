@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const API=axios.create({
-    baseURL: 'https://rgu-4h9w.onrender.com',
+    baseURL: 'https://rgu-4h9w.onrender.com'
 });
 
 API.interceptors.request.use((req)=>{
