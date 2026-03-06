@@ -7,7 +7,10 @@ require('dotenv').config();
 const app=express();
 
 //Middleware
-app.use(cors());
+app.use(cors({
+    origin:"https://rgu-eight.vercel.app",
+    credentials:true
+}));
 app.use(express.json());//handle json data
 
 const mongoURI=process.env.MONGO_URI || "mongodb://127.0.0.1:27017/ritika_udyog"
